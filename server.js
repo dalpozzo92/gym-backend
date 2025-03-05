@@ -73,4 +73,7 @@ app.get('/getUser', async (req, res) => {
     }
 });
 
-app.listen(3000, () => console.log('Server in ascolto sulla porta 3000'));
+// Porta dinamica per Koyeb
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => console.log(`Server in ascolto sulla porta ${port}`));
