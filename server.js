@@ -52,6 +52,7 @@ app.post('/register', async (req, res) => {
     return res.status(200).json({ message: 'Utente registrato con successo!'});
 });
 
+//ritorna dati user
 app.get('/getUser', async (req, res) => {
     try {
         const token = req.headers.authorization?.split(' ')[1];  // Estrai il token dal header Authorization
@@ -79,6 +80,30 @@ app.get('/getUser', async (req, res) => {
     }
 });
 
+//login utente
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+  
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  
+      if (error) {
+        return res.status(401).json({ message: error.message });
+      }
+  
+      res.json({
+        token: data.session.access_token, // Token JWT da usare per autenticarsi
+        user: data.user,
+      });
+    } catch (err) {
+      res.status(500).json({ message: 'Errore del server' });
+    }
+  });
+
+
+
+
+  
 // Porta dinamica per Koyeb
 const port = process.env.PORT || 3000;
 
