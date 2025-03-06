@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 app.use(cors());
@@ -53,6 +54,11 @@ app.post('/register', async (req, res) => {
 
 app.get('/getUser', async (req, res) => {
     try {
+        const token = req.headers.authorization?.split(' ')[1];  // Estrai il token dal header Authorization
+
+        if (!token) {
+          return res.status(401).json({ message: "Token mancante" });
+        }
         const { user } = await supabase.auth.getUser(); // Ottiene l'utente autenticato
         if (!user) {
             return res.status(401).json({ message: "Utente non autenticato" });
