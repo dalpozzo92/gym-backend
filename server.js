@@ -428,8 +428,8 @@ app.post('/login', async (req, res) => {
   debug('User authenticated:', data.user);
 
   // Genera i token
-  const accessToken = jwt.sign({ sub: data.user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '30s' });
-  const refreshToken = jwt.sign({ sub: data.user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '120s' });
+  const accessToken = jwt.sign({ sub: data.user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+  const refreshToken = jwt.sign({ sub: data.user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '2h' });
 
   debug('Access Token:', accessToken);
   debug('Refresh Token:', refreshToken);
@@ -502,8 +502,8 @@ app.post('/refresh', async (req, res) => {
     }
 
     // Genera nuovi token
-    const newAccessToken = jwt.sign({ sub: decoded.sub }, process.env.JWT_SECRET_KEY, { expiresIn: '30s' });
-    const newRefreshToken = jwt.sign({ sub: decoded.sub }, process.env.JWT_SECRET_KEY, { expiresIn: '120s' });
+    const newAccessToken = jwt.sign({ sub: decoded.sub }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+    const newRefreshToken = jwt.sign({ sub: decoded.sub }, process.env.JWT_SECRET_KEY, { expiresIn: '2h' });
 
     const decodedToken = JSON.parse(atob(newAccessToken.split('.')[1])); 
     debug("nuovo token Scade alle:", new Date(decodedToken.exp * 1000));
