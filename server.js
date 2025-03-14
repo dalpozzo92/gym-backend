@@ -361,11 +361,15 @@ const verifyToken = (req, res, next) => {
   const token = req.cookies.access_token || req.headers['authorization']?.split(' ')[1]; // Token nei cookie o nell'header
 
   if (!token) {
+    debug('[verifyToken] Token mancante o non valido');
+
     return res.status(401).json({ message: 'Token mancante o non valido' });
   }
 
   jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
     if (err) {
+      debug('[verifyToken] Token non valido o scaduto');
+
       return res.status(401).json({ message: 'Token non valido o scaduto' });
     }
 
@@ -479,6 +483,8 @@ app.post('/login', async (req, res) => {
     maxAge: 30 * 24 * 3600000, // 30 days
   });
 
+  debug('[login] login effettuato');
+
   return res.json({ message: 'Login successful', user: data.user });
 });
 
@@ -565,6 +571,8 @@ app.post('/logout', async (req, res) => {
     res.clearCookie('access_token', { httpOnly: true, secure: true, sameSite: 'Strict' });
     res.clearCookie('refresh_token', { httpOnly: true, secure: true, sameSite: 'Strict' });
 
+    debug('[logout] logout effettuato');
+
     return res.json({ message: 'Logout effettuato' });
   } catch (error) {
     console.error('Logout error:', error);
@@ -585,10 +593,14 @@ app.get('/getUser', verifyToken, async (req, res) => {
     debug('user_details: ', user_details);
 
     if (!user_details || user_details.length === 0) {
+      debug('[getUser] user non trovato');
+
       return res.status(404).json({ message: 'User not found' });
     }
     return res.json({ user_details: user_details[0] });
   } catch (error) {
+    debug('[getUser] errore getUser');
+
     return res.status(500).json({ message: 'Error fetching user details', error: error.message });
   }
 });
