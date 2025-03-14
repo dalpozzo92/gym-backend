@@ -469,13 +469,13 @@ app.post('/login', async (req, res) => {
   res.cookie('access_token', accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'Strict',
+    sameSite: 'None',
     maxAge: 3600000, // 1 hour
   });
   res.cookie('refresh_token', refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'Strict',
+    sameSite: 'None',
     maxAge: 30 * 24 * 3600000, // 30 days
   });
 
@@ -519,13 +519,13 @@ app.post('/refresh', async (req, res) => {
     res.cookie('access_token', newAccessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Strict',
+      sameSite: 'None',
       maxAge: 3600000,
     });
     res.cookie('refresh_token', newRefreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Strict',
+      sameSite: 'None',
       maxAge: 30 * 24 * 3600000,
     });
 
