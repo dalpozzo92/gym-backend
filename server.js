@@ -631,7 +631,9 @@
 // const port = process.env.PORT || 3000;
 // app.listen(port, () => console.log(`Server listening on port ${port}`));
 import dotenv from 'dotenv';
-dotenv.config();
+dotenv.config({
+  path: process.env.NODE_ENV === "production" ? ".env.production" : ".env",
+});
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
