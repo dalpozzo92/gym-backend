@@ -654,7 +654,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: process.env.NODE_ENV === 'production', httpOnly: true, sameSite: 'lax' },
+  cookie: { secure: process.env.NODE_ENV === 'production', httpOnly: true, sameSite: 'none' },
 }));
 
 //per session 1 mese
