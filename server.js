@@ -647,9 +647,18 @@ const app = express();
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 
 app.use(cors({
-  origin: CLIENT_URL,
+  origin: (origin, callback) => {
+    // Aggiungi il dominio di produzione e localhost se in modalità sviluppo
+    if (origin === 'https://gym-app-bst.netlify.app' || origin === 'http://localhost:5173') {
+      callback(null, true);
+    } else {
+      callback(new Error('Non autorizzato'), false);
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }));
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(session({
