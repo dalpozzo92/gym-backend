@@ -634,6 +634,7 @@ import dotenv from 'dotenv';
 dotenv.config({
   path: process.env.NODE_ENV === "production" ? ".env.production" : ".env",
 });
+
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -647,25 +648,23 @@ const app = express();
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 
 app.use(cors({
-  origin: (origin, callback) => {
-    // Aggiungi il dominio di produzione e localhost se in modalità sviluppo
-    if (origin === 'https://gym-app-bst.netlify.app' || origin === 'http://localhost:5173') {
-      callback(null, true);
-    } else {
-      callback(new Error('Non autorizzato'), false);
-    }
-  },
+  origin: ['https://gym-app-bst.netlify.app', 'http://localhost:5173'],
+  credentials: true,  // Permette di inviare cookie e header di autenticazione
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true,
 }));
 
 app.use(express.json());
 app.use(cookieParser());
+
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: process.env.NODE_ENV === 'production', httpOnly: true, sameSite: 'none' },
+  saveUninitialized: false,  // Evita sessioni non necessarie
+  cookie: {
+    secure: true,  // Deve essere sempre true su HTTPS
+    httpOnly: true, // Evita accesso da JavaScript (sicurezza)
+    sameSite: 'None',  // Essenziale per funzionare in cross-origin
+  },
 }));
 
 //per session 1 mese
